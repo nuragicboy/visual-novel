@@ -490,12 +490,14 @@ setup.skipAllTw = function () {
         }
     }
 
-    $('[data-passage-id="' + setup.passageId + '"]').show();
-    $('[data-passage-id="' + setup.passageId + '"] .tw-char').css('opacity', '1');
+    $('[data-passage-id="' + setup.passageId + '"]').not('.tw-cleared').show();
+    $('[data-passage-id="' + setup.passageId + '"]').not('.tw-cleared').find('.tw-char').css('opacity', '1');
 
     if (setup.twCurrent && setup.twCurrent.timer) {
         clearTimeout(setup.twCurrent.timer);
     }
+
+    $('.cmd-wait').remove(); 
 
     setup.twQueue = [];
     setup.twCurrent = null;
@@ -510,8 +512,6 @@ $(document).on('click', function (e) {
 /* ==========================================================
    2. ENGINE GRAFICO VN (Gestione Asincrona)
    ========================================================== */
-
-Config.passages.transitionOut = 300;
 
 setup.ensureLayers = function () {
     if (!document.getElementById("bg-layer")) {
@@ -621,47 +621,24 @@ setup.updateDebugTitle = function () {
 };
 
 /* ==========================================================
-   3. PANNELLO DI REGIA (DIZIONARIO DEI PERSONAGGI)
+   3. MOTORE AUDIO PER I BLIP DEI PERSONAGGI
    ========================================================== */
-
-// 🎛️ Stato iniziale: Attivo fin dall'inizio
-setup.audioEnabled = true; 
-
-setup.audioConfig = {
-    em: {
-        file: "res/audio/em.wav",  
-        volume: 0.25,
-        pitchMin: 1.20, 
-        pitchMax: 1.50   
-    },
-    an: {
-        file: "res/audio/an.wav",  
-        volume: 0.25,
-        pitchMin: 1.00, 
-        pitchMax: 1.30   
-    }
-};
-
-setup.speeds = {
-    narrazione: 15, 
-    dialogo: 25,    
-    pensiero: 45,   
-    urlo: 4         
-};
 
 setup.audioPools = {};
 setup.poolIndices = {};
-setup.poolSize = 6; 
 
 setup.initAudioEngine = function () {
     setup.audioPools = {};
     setup.poolIndices = {};
     
+    if (!setup.audioConfig) return;
+    var size = setup.poolSize || 6;
+    
     for (var key in setup.audioConfig) {
         setup.audioPools[key] = [];
         setup.poolIndices[key] = 0;
         
-        for (var i = 0; i < setup.poolSize; i++) {
+        for (var i = 0; i < size; i++) {
             var audio = new Audio(setup.audioConfig[key].file);
             audio.volume = setup.audioConfig[key].volume;
             setup.audioPools[key].push(audio);
@@ -669,10 +646,8 @@ setup.initAudioEngine = function () {
     }
 };
 
-// 🎛️ Interruttore Unico: Controlla la musica nativa SugarCube e i Blip SFX
 setup.toggleMasterAudio = function () {
     setup.audioEnabled = !setup.audioEnabled;
-    
     if (typeof SimpleAudio !== "undefined") {
         if (setup.audioEnabled) {
             SimpleAudio.unmute();
@@ -684,19 +659,17 @@ setup.toggleMasterAudio = function () {
 };
 
 setup.playCharacterBlip = function (voiceKey) {
-    // Se l'interruttore è spento, blocca la riproduzione dei blip immediatamente
     if (!setup.audioEnabled) return; 
-    
     if (!voiceKey || !setup.audioPools[voiceKey] || setup.audioPools[voiceKey].length === 0) return;
     
     var pool = setup.audioPools[voiceKey];
     var idx = setup.poolIndices[voiceKey];
     var config = setup.audioConfig[voiceKey];
+    var size = setup.poolSize || 6;
     
     var audioInstance = pool[idx];
     var randomPitch = Math.random() * (config.pitchMax - config.pitchMin) + config.pitchMin;
     
-    // 🔧 FIX ORIGINALE: Mantenuto intatto senza modifiche di posizionamento riga
     audioInstance.preservesPitch = false;
     audioInstance.webkitPreservesPitch = false;
     audioInstance.mozPreservesPitch = false;
@@ -705,7 +678,7 @@ setup.playCharacterBlip = function (voiceKey) {
     audioInstance.currentTime = 0; 
     
     audioInstance.play().catch(function(err) {});
-    setup.poolIndices[voiceKey] = (idx + 1) % setup.poolSize;
+    setup.poolIndices[voiceKey] = (idx + 1) % size;
 };
 
 /* ==========================================================
@@ -724,6 +697,7 @@ setup.parsePassageFragment = function (fragment) {
                $n.hasClass('txt-urlo') || 
                $n.hasClass('txt-narrazione') || 
                $n.hasClass('cmd-pause') || 
+               $n.hasClass('cmd-wait') ||
                $n.is('script') || 
                $n.is('style') ||
                node.nodeName === 'DIV' ||
@@ -781,7 +755,7 @@ setup.parsePassageFragment = function (fragment) {
             wrapper.appendChild(node);
         });
 
-        prepareBlockForQueue(wrapper, setup.speeds.narrazione); 
+        prepareBlockForQueue(wrapper, setup.speeds ? setup.speeds.narrazione : 15); 
         currentNarraNodes = [];
     }
 
@@ -811,18 +785,42 @@ setup.parsePassageFragment = function (fragment) {
             return;
         }
 
+        if ($node.hasClass('cmd-wait')) {
+            commitNarra();
+            var myPassageId = setup.passageId;
+            
+            setup.twQueue.push({
+                timer: null,
+                start: function () {
+                    if (setup.passageId !== myPassageId) return;
+                    
+                    var $btn = $('<a class="link-continua" style="display:inline-block; cursor:pointer; margin:12px 0; font-weight:bold; color:#00ffcc; text-decoration:none;">▼ Continua...</a>');
+                    $node.append($btn);
+                    
+                    $btn.on('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation(); 
+                        $node.prevAll().addClass('tw-cleared').hide();
+                        $node.remove(); 
+                        setup.executeNextTw(); 
+                    });
+                }
+            });
+            return;
+        }
+
         if ($node.hasClass('txt-dialogo')) {
             commitNarra();
-            prepareBlockForQueue(node, setup.speeds.dialogo);
+            prepareBlockForQueue(node, setup.speeds ? setup.speeds.dialogo : 25);
         } else if ($node.hasClass('txt-pensiero')) {
             commitNarra();
-            prepareBlockForQueue(node, setup.speeds.pensiero);
+            prepareBlockForQueue(node, setup.speeds ? setup.speeds.pensiero : 45);
         } else if ($node.hasClass('txt-urlo')) {
             commitNarra();
-            prepareBlockForQueue(node, setup.speeds.urlo);
+            prepareBlockForQueue(node, setup.speeds ? setup.speeds.urlo : 4);
         } else if ($node.hasClass('txt-narrazione')) {
             commitNarra();
-            prepareBlockForQueue(node, setup.speeds.narrazione);
+            prepareBlockForQueue(node, setup.speeds ? setup.speeds.narrazione : 15);
         } else {
             currentNarraNodes.push(node);
         }
@@ -838,7 +836,6 @@ setup.parsePassageFragment = function (fragment) {
 $(document).on(':storyready', function () {
     setup.ensureLayers();
     setup.initAudioEngine();
-    
     if (!document.getElementById("debug-passage-title")) {
         document.body.insertAdjacentHTML("afterbegin", '<div id="debug-passage-title"></div>');
     }
@@ -854,9 +851,7 @@ $(document).on(':passagestart', function () {
 });
 
 $(document).on(':passagerender', function (ev) {
-    if (ev.passage === "StoryCaption" || ev.passage === "StoryMenu") {
-        return;
-    }
+    if (ev.passage === "StoryCaption" || ev.passage === "StoryMenu") return;
     setup.parsePassageFragment(ev.content);
 });
 
@@ -866,10 +861,8 @@ $(document).on(':passagedisplay', function () {
 
     setup.updateBG(function() {
         if (setup.passageId !== currentId) return;
-
         setup.renderChars(function() {
             if (setup.passageId !== currentId) return;
-
             if (setup.twQueue.length > 0 && !setup.twCurrent) {
                 setup.executeNextTw();
             } else if (setup.twQueue.length === 0 && !setup.twCurrent) {
@@ -990,15 +983,62 @@ Sei pronta al peggio, ma all&#39;altro capo senti la voce di tua sorella:
 &quot;Scusamiiiiii, sto arrivandooooo&quot;
 
 [[&quot;Cosa diamine era quel messaggio?&quot;|ottobre.messaggio.3]]
-[[&quot;Tutto bene? che succede?&quot;|ottobre.messaggio.3]]</tw-passagedata><tw-passagedata pid="20" name="StoryInit" tags="" position="375,800" size="100,100">
-
-&lt;&lt;set $charLeft = &quot;&quot;&gt;&gt;
+[[&quot;Tutto bene? che succede?&quot;|ottobre.messaggio.3]]</tw-passagedata><tw-passagedata pid="20" name="StoryInit" tags="" position="375,800" size="100,100">&lt;&lt;set $charLeft = &quot;&quot;&gt;&gt;
 &lt;&lt;set $charRight = &quot;&quot;&gt;&gt;
 &lt;&lt;set $charCenter = &quot;&quot;&gt;&gt;
 
-&lt;&lt;set $musicOn = true&gt;&gt;
+/* ==========================================================
+   PANNELLO DI CONFIGURAZIONE VN (Modificabile On-The-Fly)
+   ========================================================== */
+&lt;&lt;script&gt;&gt;
+// 1. Velocità di contorno del testo (millisecondi per carattere)
+setup.speeds = {
+    narrazione: 15, 
+    dialogo: 25,    
+    pensiero: 45,   
+    urlo: 4         
+    pausaTraRighe: 350 // &lt;--- NUOVO: Millisecondi di attesa TRA una riga e l&#39;altra
+};
+
+// 2. Configurazione dei Blip Vocali dei Personaggi
+setup.audioConfig = {
+    em: {
+        file: &quot;res/audio/em.wav&quot;,  
+        volume: 0.25,
+        pitchMin: 1.20, 
+        pitchMax: 1.50   
+    },
+    an: {
+        file: &quot;res/audio/an.wav&quot;,  
+        volume: 0.25,
+        pitchMin: 1.00, 
+        pitchMax: 1.30   
+    }
+};
+
+// 3. Impostazioni di Sistema Audio/Video
+setup.poolSize = 6;         // Quanti file audio simultanei allocare per i blip
+setup.audioEnabled = true;  // Se i blip vocali partono attivi (true) o mutati (false)
+
+// 4. Configurazione Nativa di SugarCube
+Config.passages.transitionOut = 300; // Tempo di dissolvenza dei passaggi
+&lt;&lt;/script&gt;&gt;
+
+/* ==========================================================
+   GESTIONE TRACCE MUSICALI E AVVIO AUDIO
+   ========================================================== */
+/* Pre-carica tutti i brani del gioco */
 &lt;&lt;cacheaudio &quot;bgm&quot; &quot;res/audio/music.mp3&quot;&gt;&gt;
+&lt;&lt;cacheaudio &quot;bgm_tensione&quot; &quot;res/audio/tensione.mp3&quot;&gt;&gt;
+&lt;&lt;cacheaudio &quot;bgm_triste&quot; &quot;res/audio/triste.mp3&quot;&gt;&gt;
+
+/* Inizializzazione variabili audio per il pulsante */
+&lt;&lt;set $musicOn = true&gt;&gt;
+&lt;&lt;set $currentBGM = &quot;bgm&quot;&gt;&gt;
+
+/* Fa partire la musica iniziale del gioco */
 &lt;&lt;audio &quot;bgm&quot; volume 0.05 loop play&gt;&gt; 
+
 &lt;&lt;run UIBar.update()&gt;&gt;</tw-passagedata><tw-passagedata pid="21" name="Dicembre" tags="" position="3600,800" size="100,100"></tw-passagedata><tw-passagedata pid="22" name="ottobre.9.b" tags="" position="2800,1000" size="200,200">&quot;Hahahahahaha certo assolutamente hahahaha&quot; dice ridendo.
 Si scusa altre 300 volte e poi partite verso casa, ma hai come l&#39;impressione che ti stia nascondendo qualcosina, ma non sai cosa.
 Magari è solo giù perché si è separata dal suo ragazzo.
@@ -1047,12 +1087,16 @@ Emily non mentiva: 30 secondi dopo la sua sagoma familiare spunta da dietro l&#3
   &lt;&lt;set $charCenter = &quot;&quot;&gt;&gt;
 &lt;&lt;/silently&gt;&gt;\
 \
-di loc: camera da letto 
-che succ: Emily ha un nuovo fidanzato
 &lt;&lt;di &quot;em&quot; &quot;scelte non pesate:&quot;&gt;&gt;
+
 La nebbia avvolgeva i lampioni lungo la strada deserta.
+&lt;&lt;pause 1500&gt;&gt; &lt;!-- Pausa automatica di un secondo e mezzo prima del dialogo di an --&gt;
+
 &lt;&lt;di &quot;an&quot; &quot;Pensi che ci stia seguendo?&quot;&gt;&gt;
+&lt;&lt;continua&gt;&gt; &lt;!-- Il testo si blocca qui finché il giocatore non fa clic su &quot;Continua...&quot; --&gt;
+
 Un brivido improvviso mi bloccò i passi.
+
 &lt;&lt;di &quot;em&quot; &quot;Non voltarti. Continua a camminare.&quot;&gt;&gt;
 
 
@@ -1084,6 +1128,21 @@ Un brivido improvviso mi bloccò i passi.
 
 &lt;&lt;widget &quot;attesa&quot;&gt;&gt;
     &lt;div class=&quot;cmd-pause&quot; data-time=&quot;_args[0]&quot;&gt;&lt;/div&gt;
+&lt;&lt;/widget&gt;&gt;
+
+&lt;&lt;widget &quot;pause&quot;&gt;&gt;\
+    &lt;div class=&quot;cmd-pause&quot; data-time=&quot;$args[0]&quot;&gt;&lt;/div&gt;\
+&lt;&lt;/widget&gt;&gt;
+
+&lt;&lt;widget &quot;continua&quot;&gt;&gt;\
+    &lt;div class=&quot;cmd-wait&quot;&gt;&lt;/div&gt;\
+&lt;&lt;/widget&gt;&gt;
+
+&lt;&lt;widget &quot;changemusic&quot;&gt;&gt;\
+    /* Ferma qualsiasi musica di SugarCube sia in riproduzione in questo momento */
+    &lt;&lt;audio &quot;:playing&quot; stop&gt;&gt;\
+    /* Fa partire la nuova traccia passata come argomento, mantenendo il volume a 0.05 e in loop */
+    &lt;&lt;audio $args[0] volume 0.05 loop play&gt;&gt;\
 &lt;&lt;/widget&gt;&gt;</tw-passagedata></tw-storydata>
 	<script id="script-sugarcube" type="text/javascript">
 	/*! SugarCube JS */
