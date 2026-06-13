@@ -130,56 +130,62 @@ body {
   top: 0;
   left: 0;
   bottom: 0;
-
   width: 100px;
   z-index: 1000;
-
   background: rgba(0, 0, 0, 0.45);
   backdrop-filter: blur(6px);
-
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-/* Rimuove elementi inutili di SugarCube */
 #ui-bar-toggle,
 #ui-bar-header,
 #story-title {
   display: none !important;
 }
 
-/* Contenitore Pulsanti Sidebar */
 #ui-bar-body {
   width: 100%;
   padding-top: 10px;
-
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 14px;
 }
 
-/* 🔧 FIX: Stile dei bottoni adattato per mostrare il testo */
-#ui-bar-body a {
-  width: 80%; /* Si allarga quasi per tutta la sidebar */
-  min-height: 46px; /* Altezza minima, ma può crescere */
-  padding: 8px 4px; 
+/* Fix per l'allineamento di StoryCaption */
+#story-caption {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
+#music-btn {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+/* Gestione dei bottoni generici nella barra laterale */
+#ui-bar-body a {
+  width: 80%; 
+  min-height: 46px; 
+  padding: 8px 4px; 
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-
   color: white;
   text-decoration: none;
-  font-size: 11px; /* Mostra il testo! */
+  font-size: 11px; 
   line-height: 1.2;
-
   border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 8px;
   transition: 0.15s ease;
   cursor: pointer;
+  box-sizing: border-box;
 }
 
 #ui-bar-body a:hover {
@@ -195,104 +201,85 @@ body {
 #story {
   position: absolute;
   top: 0;
-  left: 100px; /* Esclude perfettamente la sidebar */
+  left: 100px; 
   right: 0;
   bottom: 0;
   overflow: hidden;
-  
   margin: 0 ; 
   padding: 0 ;
-
-  overflow: hidden;
 }
 
 /* ==========================================================
-   VN TEXTBOX (IL BOX RIMANE FISSO, IL TESTO FA FADE)
+   VN TEXTBOX
    ========================================================== */
 
-/* Il contenitore esterno: resta immobile e non flasha mai */
 #passages {
   position: absolute;
-
-  /* Posizione identica a prima */
   left: 5%;
   right: 5%;
   bottom: 5vh;
   height: 30.33vh;
-
-  /* Sfondo e bordo applicati qui */
   background: rgba(0, 0, 0, 0.85);
   border: 2px solid white;
   z-index: 10;
 }
 
-/* Il testo dentro il box: gestisce le transizioni */
 .passage {
   box-sizing: border-box;
   width: 100%;
   height: 100%;
   padding: 20px;
-  
   color: white;
   line-height: 1.4;
   overflow-y: auto;
-
-  /* Stato normale: visibile. Tempo della transizione sincronizzato col JS (0.3s) */
   opacity: 1;
   transition: opacity 0.3s ease-in-out;
 }
 
-/* [FADE IN] Stato di partenza del nuovo testo appena entra */
 .passage-in {
   opacity: 0;
 }
 
-/* [FADE OUT] Stato finale del vecchio testo mentre esce */
 .passage-out {
   opacity: 0;
-  position: absolute; /* Evita che il testo vecchio e nuovo si spingano a vicenda */
+  position: absolute;
   top: 0;
   left: 0;
 }
 
-/* 🔧 FIX NON DISTRUTTIVO PER GLI SPAZI */
 .passage p {
   margin: 0;
   padding: 0;
 }
 
 /* =========================
-   CHOICES (AUTOMATIC FADE)
+   CHOICES (FADE AGGIUSTATO)
 ========================= */
 
-a.link-internal {
+/* 🔧 CHIAVE DEL FIX: Aggiunto ".passage" davanti. 
+   Ora l'effetto invisibile colpisce SOLO le scelte di gioco e lascia in pace la sidebar! */
+.passage a.link-internal {
   display: block;
-  padding: 8px 10px; /* Un po' più di respiro per i click/tap */
+  padding: 8px 10px;
   border: 1px solid white;
   color: white;
   text-decoration: none;
   cursor: pointer;
-
-  /* ⚙️ EFFETTO AUTOMATICO DI ATTESA */
   opacity: 0;
-  pointer-events: none; /* Non cliccabile finché è invisibile */
+  pointer-events: none;
   transition: opacity 0.6s ease-in-out, background 0.15s, color 0.15s;
 }
 
-/* Stato attivato dal JavaScript a fine testo */
-a.link-internal.reveal {
+.passage a.link-internal.reveal {
   opacity: 1;
   pointer-events: auto;
 }
 
-a.link-internal:hover {
+.passage a.link-internal:hover {
   background: white;
   color: black;
 }
 
-/* 🎯 SPAZIATURA AUTOMATICA: 
-   Mette 20px di spazio sopra la prima scelta per staccarla dal testo,
-   e 8px tra una scelta e l'altra per non tenerle appiccicate. */
 .txt-narrazione + a.link-internal,
 .txt-dialogo + a.link-internal {
   margin-top: 20px;
@@ -307,10 +294,8 @@ a.link-internal + a.link-internal {
 ========================= */
 
 #char-layer-container {
-
   position: fixed;
   inset: 0;
-
   pointer-events: none;
   z-index: 5;
 }
@@ -335,31 +320,23 @@ a.link-internal + a.link-internal {
 
 #debug-passage-title {
   position: fixed;
-
   top: 0;
-  left: 70px; /* evita sidebar */
+  left: 70px;
   right: 0;
-
   height: 30px;
   line-height: 30px;
-
   background: rgba(0,0,0,0.7);
   color: #00ff00;
-
   font-size: 14px;
   font-family: monospace;
-
   padding-left: 10px;
-
   z-index: 2000;
 }
 
 /* ==========================================================
-   DIFFERENZIAZIONE TESTI (VN PERFECT BLOCK LAYOUT)
+   DIFFERENZIAZIONE TESTI
    ========================================================== */
 
-/* 🎯 FIX CHIRURGICO: Nasconde SOLO il primo a capo automatico dopo il widget.
-   Il '+' seleziona il <br> solo se è preceduto immediatamente dal nostro div. */
 .txt-narrazione + br, 
 .txt-dialogo + br {
   display: none;
@@ -367,40 +344,32 @@ a.link-internal + a.link-internal {
 
 .txt-narrazione, 
 .txt-dialogo {
-  display: block;               /* Ogni battuta diventa un blocco a sé */
-  margin: 0 0 0 0;           /* 12px è lo spazio ESATTO tra una riga e l'altra. Modificalo qui al millimetro! */
+  display: block; 
+  margin: 0;
   padding: 0;
   line-height: 1;
 }
 
-/* Narrazione: corsiva e grigia */
 .txt-narrazione {
   font-style: italic;
   color: #b0b0b0; 
 }
 
-/* Dialogo: dritto e bianco pieno */
 .txt-dialogo {
   font-style: normal;
   color: #ffffff; 
 }
 
-/* ==========================================================
-   COMP COMPARSA SCELTE CON FADE IN
-   ========================================================== */
-
-/* Lo stato iniziale del contenitore delle scelte: invisibile */
 .scelte {
   opacity: 0;
-  pointer-events: none;       /* Impedisce di cliccare i bottoni finché sono invisibili */
-  transition: opacity 0.6s ease-in-out; /* Velocità del fade-in (0.6 secondi) */
-  margin-top: 15px;           /* Spazio pulito tra l'ultima riga di testo e i bottoni */
+  pointer-events: none; 
+  transition: opacity 0.6s ease-in-out;
+  margin-top: 15px; 
 }
 
-/* Lo stato finale: attivato dal JavaScript quando il testo è completato */
 .scelte.reveal {
   opacity: 1;
-  pointer-events: auto;       /* Rende i bottoni di nuovo cliccabili */
+  pointer-events: auto; 
 }</style><script role="script" id="twine-user-script" type="text/twine-javascript">/* ==========================================================
    1. REGISTRO DI CICLO E MOTORE SEQUENZIALE PROTETTO
    ========================================================== */
@@ -438,6 +407,16 @@ function prepareBlockForQueue(element, speed) {
     element.dataset.passageId = setup.passageId;
     var myPassageId = setup.passageId; 
 
+    var voiceKey = null;
+    if (setup.audioConfig) {
+        for (var key in setup.audioConfig) {
+            if (element.classList.contains(key)) {
+                voiceKey = key;
+                break;
+            }
+        }
+    }
+
     var twInstance = {
         timer: null,
         start: function () {
@@ -453,10 +432,9 @@ function prepareBlockForQueue(element, speed) {
                 if (idx < chars.length) {
                     chars[idx].style.opacity = '1';
                     
-                    // AGGIUNTA: Riproduce il blip sonoro solo se il carattere non è uno spazio vuoto
                     var character = chars[idx].textContent;
-                    if (character && character.trim().length > 0) {
-                        setup.playCharacterBlip();
+                    if (character && character.trim().length > 0 && voiceKey) {
+                        setup.playCharacterBlip(voiceKey);
                     }
 
                     idx++;
@@ -643,18 +621,27 @@ setup.updateDebugTitle = function () {
 };
 
 /* ==========================================================
-   3. PANNELLO DI REGIA (VELOCITÀ & EFFETTI AUDIO)
+   3. PANNELLO DI REGIA (DIZIONARIO DEI PERSONAGGI)
    ========================================================== */
 
-// --- CONFIGURAZIONE AUDIO ANIMAL CROSSING ---
+// 🎛️ Stato iniziale: Attivo fin dall'inizio
+setup.audioEnabled = true; 
+
 setup.audioConfig = {
-    file: "res/sound/blip.mp3",  // Il percorso del tuo file audio (usa un file .mp3 o .wav cortissimo, max 0.2 secondi)
-    volume: 0.25,                 // Volume dell'effetto (da 0.0 a 1.0)
-    pitchMin: 0.85,               // Pitch minimo (più basso = suono più grave)
-    pitchMax: 1.15                // Pitch massimo (più alto = suono più acuto)
+    em: {
+        file: "res/audio/em.wav",  
+        volume: 0.25,
+        pitchMin: 1.20, 
+        pitchMax: 1.50   
+    },
+    an: {
+        file: "res/audio/an.wav",  
+        volume: 0.25,
+        pitchMin: 1.00, 
+        pitchMax: 1.30   
+    }
 };
 
-// --- TIMING DI SCRITTURA ---
 setup.speeds = {
     narrazione: 15, 
     dialogo: 25,    
@@ -662,39 +649,64 @@ setup.speeds = {
     urlo: 4         
 };
 
-// Logica di gestione polifonica dell'Audio Pool
-setup.audioPool = [];
+setup.audioPools = {};
+setup.poolIndices = {};
 setup.poolSize = 6; 
-setup.poolIndex = 0;
 
 setup.initAudioEngine = function () {
-    setup.audioPool = [];
-    for (var i = 0; i < setup.poolSize; i++) {
-        var audio = new Audio(setup.audioConfig.file);
-        audio.volume = setup.audioConfig.volume;
-        setup.audioPool.push(audio);
+    setup.audioPools = {};
+    setup.poolIndices = {};
+    
+    for (var key in setup.audioConfig) {
+        setup.audioPools[key] = [];
+        setup.poolIndices[key] = 0;
+        
+        for (var i = 0; i < setup.poolSize; i++) {
+            var audio = new Audio(setup.audioConfig[key].file);
+            audio.volume = setup.audioConfig[key].volume;
+            setup.audioPools[key].push(audio);
+        }
     }
 };
 
-setup.playCharacterBlip = function () {
-    if (setup.audioPool.length === 0) return;
+// 🎛️ Interruttore Unico: Controlla la musica nativa SugarCube e i Blip SFX
+setup.toggleMasterAudio = function () {
+    setup.audioEnabled = !setup.audioEnabled;
     
-    var audioInstance = setup.audioPool[setup.poolIndex];
-    
-    // Genera una variazione di pitch casuale ad ogni esecuzione
-    var randomPitch = Math.random() * (setup.audioConfig.pitchMax - setup.audioConfig.pitchMin) + setup.audioConfig.pitchMin;
-    
-    audioInstance.playbackRate = randomPitch;
-    audioInstance.currentTime = 0; // Resetta l'audio all'inizio per poterlo sovrapporre
-    
-    audioInstance.play().catch(function(err) {
-        // Ignora silenziosamente le restrizioni di autoplay dei browser finché l'utente non interagisce
-    });
-    
-    // Passa al canale successivo del pool rotante
-    setup.poolIndex = (setup.poolIndex + 1) % setup.poolSize;
+    if (typeof SimpleAudio !== "undefined") {
+        if (setup.audioEnabled) {
+            SimpleAudio.unmute();
+        } else {
+            SimpleAudio.mute();
+        }
+    }
+    return setup.audioEnabled;
 };
 
+setup.playCharacterBlip = function (voiceKey) {
+    // Se l'interruttore è spento, blocca la riproduzione dei blip immediatamente
+    if (!setup.audioEnabled) return; 
+    
+    if (!voiceKey || !setup.audioPools[voiceKey] || setup.audioPools[voiceKey].length === 0) return;
+    
+    var pool = setup.audioPools[voiceKey];
+    var idx = setup.poolIndices[voiceKey];
+    var config = setup.audioConfig[voiceKey];
+    
+    var audioInstance = pool[idx];
+    var randomPitch = Math.random() * (config.pitchMax - config.pitchMin) + config.pitchMin;
+    
+    // 🔧 FIX ORIGINALE: Mantenuto intatto senza modifiche di posizionamento riga
+    audioInstance.preservesPitch = false;
+    audioInstance.webkitPreservesPitch = false;
+    audioInstance.mozPreservesPitch = false;
+    
+    audioInstance.playbackRate = randomPitch;
+    audioInstance.currentTime = 0; 
+    
+    audioInstance.play().catch(function(err) {});
+    setup.poolIndices[voiceKey] = (idx + 1) % setup.poolSize;
+};
 
 /* ==========================================================
    4. PARSER STRUTTURALE RADICALE
@@ -825,7 +837,6 @@ setup.parsePassageFragment = function (fragment) {
 
 $(document).on(':storyready', function () {
     setup.ensureLayers();
-    // Inizializza i canali audio all'avvio del gioco
     setup.initAudioEngine();
     
     if (!document.getElementById("debug-passage-title")) {
@@ -843,6 +854,9 @@ $(document).on(':passagestart', function () {
 });
 
 $(document).on(':passagerender', function (ev) {
+    if (ev.passage === "StoryCaption" || ev.passage === "StoryMenu") {
+        return;
+    }
     setup.parsePassageFragment(ev.content);
 });
 
@@ -863,25 +877,7 @@ $(document).on(':passagedisplay', function () {
             }
         });
     });
-});</script><tw-tag name="stylesheet" color="red"></tw-tag><tw-tag name="widget" color="purple"></tw-tag><tw-tag name="nobr" color=""></tw-tag><tw-passagedata pid="1" name="Start" tags="" position="700,100" size="200,100">&lt;&lt;silently&gt;&gt;
-  &lt;&lt;set $bg = &quot;res/img/bgd/bgd2.png&quot;&gt;&gt;
-  &lt;&lt;set $charLeft = &quot;res/img/char/char1.jpeg&quot;&gt;&gt;
-  &lt;&lt;set $charRight = &quot;res/img/char/char2.jpeg&quot;&gt;&gt;
-  &lt;&lt;set $charCenter = &quot;&quot;&gt;&gt;
-&lt;&lt;/silently&gt;&gt;\
-\
-di loc: camera da letto 
-che succ: Emily ha un nuovo fidanzato
-&lt;&lt;di &quot;scelte non pesate:&quot;&gt;&gt;
-La nebbia avvolgeva i lampioni lungo la strada deserta.
-&lt;&lt;di &quot;Pensi che ci stia seguendo?&quot;&gt;&gt;
-Un brivido improvviso mi bloccò i passi.
-&lt;&lt;di &quot;Non voltarti. Continua a camminare.&quot;&gt;&gt;
-
-
-[[yay|coso]]
-[[che bello|coso]]
-[[ma è simpatico?|coso]]</tw-passagedata><tw-passagedata pid="2" name="coso" tags="" position="675,275" size="200,100">&lt;&lt;silently&gt;&gt;
+});</script><tw-tag name="stylesheet" color="red"></tw-tag><tw-tag name="widget" color="purple"></tw-tag><tw-tag name="nobr" color=""></tw-tag><tw-passagedata pid="1" name="Start" tags="" position="575,475" size="200,100">[[inizio]]</tw-passagedata><tw-passagedata pid="2" name="inizio" tags="" position="550,875" size="200,100">&lt;&lt;silently&gt;&gt;
   &lt;&lt;set $bg = &quot;res/img/bgd/bgd1.png&quot;&gt;&gt;
   &lt;&lt;set $charLeft = &quot;res/img/char/char2.jpeg&quot;&gt;&gt;
   &lt;&lt;set $charRight = &quot;res/img/char/char1.jpeg&quot;&gt;&gt;
@@ -891,30 +887,32 @@ Un brivido improvviso mi bloccò i passi.
 
 le sorellì ciarlano
 
+[[eee!tiziopalle]]
+
 [[avanti|01.inizio]]
 
-[[eee!tiziopalle]]</tw-passagedata><tw-passagedata pid="3" name="01.inizio" tags="" position="1000,200" size="200,200">loc: andata scuola
+</tw-passagedata><tw-passagedata pid="3" name="01.inizio" tags="" position="1100,825" size="200,200">loc: andata scuola
 
 che succ: Solitamente Emily e Andrea vanno a scuola assieme. Emily si alza per scendere dal bus qualche fermata prima
 
 [[ma che fai mi abbandoni?|ottobre.1.a]]
-[[signorina lei sta prendendo una brutta strada (ironica)|ottobre.1.b]]</tw-passagedata><tw-passagedata pid="4" name="ottobre.1.a" tags="" position="900,475" size="200,200">Scusa, so che odi navigare tra i maranzini da sola ma Max mi ha chiesto di vederci prima di scuola
+[[signorina lei sta prendendo una brutta strada (ironica)|ottobre.1.b]]</tw-passagedata><tw-passagedata pid="4" name="ottobre.1.a" tags="" position="1000,1100" size="200,200">Scusa, so che odi navigare tra i maranzini da sola ma Max mi ha chiesto di vederci prima di scuola
 
 [[aaaawwww i piccioncini si vedono prima di scuolaaa (tono sdolcinato)|ottobre.2.a]]
 [[dev’essere proprio figo sto Max se riesce a far deviare direzione persino all’irreprensibile Emily!|ottobre.2.b]]
-[[ci sta|ottobre.3]]</tw-passagedata><tw-passagedata pid="5" name="ottobre.1.b" tags="" position="1200,450" size="200,200">Esatto, prossimo passo rapinare una banca! (ride) no dai, vedo Max prima di scuola|
+[[ci sta|ottobre.3]]</tw-passagedata><tw-passagedata pid="5" name="ottobre.1.b" tags="" position="1300,1075" size="200,200">Esatto, prossimo passo rapinare una banca! (ride) no dai, vedo Max prima di scuola|
 
 [[aaaawwww i piccioncini si vedono prima di scuolaaa (tono sdolcinato)|ottobre.2.a]]
 [[dev’essere proprio figo sto Max se riesce a far deviare direzione persino all’irreprensibile Emily!|ottobre.2.b]]
-[[ci sta|ottobre.3]]</tw-passagedata><tw-passagedata pid="6" name="ottobre.2.a" tags="" position="900,775" size="200,100">prima ti uccido e poi ti trasformo in mangime per i pesci. (sguardo glaciale)
+[[ci sta|ottobre.3]]</tw-passagedata><tw-passagedata pid="6" name="ottobre.2.a" tags="" position="1000,1400" size="200,100">prima ti uccido e poi ti trasformo in mangime per i pesci. (sguardo glaciale)
 
-[[avanti|ottobre.3]]</tw-passagedata><tw-passagedata pid="7" name="ottobre.2.b" tags="" position="1225,750" size="200,100">Ma no, è solo caruccio hahaha (arrossisce)
+[[avanti|ottobre.3]]</tw-passagedata><tw-passagedata pid="7" name="ottobre.2.b" tags="" position="1325,1375" size="200,100">Ma no, è solo caruccio hahaha (arrossisce)
 
-[[avanti|ottobre.3]]</tw-passagedata><tw-passagedata pid="8" name="ottobre.3" tags="" position="1000,975" size="200,200">comunque non disperare, per farmi perdonare torniamo a casa assieme, che dici? anche perché.. [si tasta le tasche]..potrei aver dimenticato le chiavi a casa...
+[[avanti|ottobre.3]]</tw-passagedata><tw-passagedata pid="8" name="ottobre.3" tags="" position="1100,1600" size="200,200">comunque non disperare, per farmi perdonare torniamo a casa assieme, che dici? anche perché.. [si tasta le tasche]..potrei aver dimenticato le chiavi a casa...
 
-[[Non ce la puoi proprio fare a non perder le cose tu eh? comunque va bene, ti aspetto a scuola!|ottobre.4]]</tw-passagedata><tw-passagedata pid="9" name="ottobre.4" tags="" position="1300,1000" size="200,100">Grazie sis! per le due in punto sono da te!
+[[Non ce la puoi proprio fare a non perder le cose tu eh? comunque va bene, ti aspetto a scuola!|ottobre.4]]</tw-passagedata><tw-passagedata pid="9" name="ottobre.4" tags="" position="1400,1625" size="200,100">Grazie sis! per le due in punto sono da te!
 
-[[continua|ottobre.5]]</tw-passagedata><tw-passagedata pid="10" name="ottobre.5" tags="" position="1525,950" size="200,200">sono le 2:05, di Emily neanche l&#39;ombra
+[[continua|ottobre.5]]</tw-passagedata><tw-passagedata pid="10" name="ottobre.5" tags="" position="1625,1575" size="200,200">sono le 2:05, di Emily neanche l&#39;ombra
 
 che fai?
 [[sarà solo in ritardo, anche se per lei è strano... aspetto|ottobre.6.a]]
@@ -992,14 +990,16 @@ Sei pronta al peggio, ma all&#39;altro capo senti la voce di tua sorella:
 &quot;Scusamiiiiii, sto arrivandooooo&quot;
 
 [[&quot;Cosa diamine era quel messaggio?&quot;|ottobre.messaggio.3]]
-[[&quot;Tutto bene? che succede?&quot;|ottobre.messaggio.3]]</tw-passagedata><tw-passagedata pid="20" name="StoryInit" tags="" position="500,200" size="100,100">&lt;&lt;set $bg = &quot;res/img/bgd/bgd1.png&quot;&gt;&gt;
+[[&quot;Tutto bene? che succede?&quot;|ottobre.messaggio.3]]</tw-passagedata><tw-passagedata pid="20" name="StoryInit" tags="" position="375,800" size="100,100">
 
 &lt;&lt;set $charLeft = &quot;&quot;&gt;&gt;
 &lt;&lt;set $charRight = &quot;&quot;&gt;&gt;
 &lt;&lt;set $charCenter = &quot;&quot;&gt;&gt;
 
+&lt;&lt;set $musicOn = true&gt;&gt;
 &lt;&lt;cacheaudio &quot;bgm&quot; &quot;res/audio/music.mp3&quot;&gt;&gt;
-&lt;&lt;set $musicOn = false&gt;&gt;</tw-passagedata><tw-passagedata pid="21" name="Dicembre" tags="" position="3600,800" size="100,100"></tw-passagedata><tw-passagedata pid="22" name="ottobre.9.b" tags="" position="2800,1000" size="200,200">&quot;Hahahahahaha certo assolutamente hahahaha&quot; dice ridendo.
+&lt;&lt;audio &quot;bgm&quot; volume 0.05 loop play&gt;&gt; 
+&lt;&lt;run UIBar.update()&gt;&gt;</tw-passagedata><tw-passagedata pid="21" name="Dicembre" tags="" position="3600,800" size="100,100"></tw-passagedata><tw-passagedata pid="22" name="ottobre.9.b" tags="" position="2800,1000" size="200,200">&quot;Hahahahahaha certo assolutamente hahahaha&quot; dice ridendo.
 Si scusa altre 300 volte e poi partite verso casa, ma hai come l&#39;impressione che ti stia nascondendo qualcosina, ma non sai cosa.
 Magari è solo giù perché si è separata dal suo ragazzo.
 vabbé, domani starà meglio.
@@ -1009,7 +1009,7 @@ vabbé, domani starà meglio.
 
 Conosci quello sguardo, Emily sta senza ombra di dubbio nascondendo qualcosa.
 
-[[Tutto ok? è successo qualcosa?|ottobre.10]]</tw-passagedata><tw-passagedata pid="24" name="dicembre.b" tags="" position="3600,1100" size="100,100"></tw-passagedata><tw-passagedata pid="25" name="StoryCaption" tags="" position="500,400" size="100,100">&lt;div id=&quot;music-btn&quot;&gt;
+[[Tutto ok? è successo qualcosa?|ottobre.10]]</tw-passagedata><tw-passagedata pid="24" name="dicembre.b" tags="" position="3600,1100" size="100,100"></tw-passagedata><tw-passagedata pid="25" name="StoryCaption" tags="" position="375,1000" size="100,100">&lt;div id=&quot;music-btn&quot;&gt;
 
 &lt;&lt;if $musicOn&gt;&gt;
     &lt;&lt;link &quot;🎵 Music: ON&quot;&gt;&gt;
@@ -1020,7 +1020,7 @@ Conosci quello sguardo, Emily sta senza ombra di dubbio nascondendo qualcosa.
 &lt;&lt;else&gt;&gt;
     &lt;&lt;link &quot;🔇 Music: OFF&quot;&gt;&gt;
         &lt;&lt;set $musicOn = true&gt;&gt;
-        &lt;&lt;audio &quot;bgm&quot; loop play&gt;&gt;
+        &lt;&lt;audio &quot;bgm&quot; volume 0.05 loop play&gt;&gt; 
         &lt;&lt;run UIBar.update()&gt;&gt;
     &lt;&lt;/link&gt;&gt;
 &lt;&lt;/if&gt;&gt;
@@ -1040,16 +1040,46 @@ Emily non mentiva: 30 secondi dopo la sua sagoma familiare spunta da dietro l&#3
 
 [[&quot;Hey! Non sapevo avessero aperto un circo. Chi era quel clown?&quot;|ottobre.messaggio.4]]
 [[&quot;Alla buon ora! è un sacco che ti aspetto, potevi almeno avvisare!&quot;|ottobre.messaggio.4]]
-</tw-passagedata><tw-passagedata pid="28" name="ottobre.messaggio.4" tags="" position="2800,1600" size="100,100"></tw-passagedata><tw-passagedata pid="29" name="eee!tiziopalle" tags="" position="725,400" size="100,100">palle</tw-passagedata><tw-passagedata pid="30" name="Widget" tags="widget nobr" position="475,600" size="100,100">&lt;&lt;widget &quot;di&quot;&gt;&gt;
-    &lt;div class=&quot;txt-dialogo&quot;&gt;— &lt;&lt;print _args[0]&gt;&gt;&lt;/div&gt;
+</tw-passagedata><tw-passagedata pid="28" name="ottobre.messaggio.4" tags="" position="2800,1600" size="100,100"></tw-passagedata><tw-passagedata pid="29" name="eee!tiziopalle" tags="" position="575,1200" size="100,100">&lt;&lt;silently&gt;&gt;
+  &lt;&lt;set $bg = &quot;res/img/bgd/bgd2.png&quot;&gt;&gt;
+  &lt;&lt;set $charLeft = &quot;res/img/char/char1.jpeg&quot;&gt;&gt;
+  &lt;&lt;set $charRight = &quot;res/img/char/char2.jpeg&quot;&gt;&gt;
+  &lt;&lt;set $charCenter = &quot;&quot;&gt;&gt;
+&lt;&lt;/silently&gt;&gt;\
+\
+di loc: camera da letto 
+che succ: Emily ha un nuovo fidanzato
+&lt;&lt;di &quot;em&quot; &quot;scelte non pesate:&quot;&gt;&gt;
+La nebbia avvolgeva i lampioni lungo la strada deserta.
+&lt;&lt;di &quot;an&quot; &quot;Pensi che ci stia seguendo?&quot;&gt;&gt;
+Un brivido improvviso mi bloccò i passi.
+&lt;&lt;di &quot;em&quot; &quot;Non voltarti. Continua a camminare.&quot;&gt;&gt;
+
+
+[[yay|inizio]]
+[[che bello|inizio]]
+[[ma è simpatico?|inizio]]</tw-passagedata><tw-passagedata pid="30" name="Widget" tags="widget nobr" position="350,1200" size="100,100">&lt;&lt;widget &quot;di&quot;&gt;&gt;
+    &lt;&lt;if _args[1] is undefined&gt;&gt;
+        &lt;div class=&quot;txt-dialogo&quot;&gt;— &lt;&lt;print _args[0]&gt;&gt;&lt;/div&gt;
+    &lt;&lt;else&gt;&gt;
+        &lt;div @class=&quot;&#39;txt-dialogo &#39; + _args[0]&quot;&gt;— &lt;&lt;print _args[1]&gt;&gt;&lt;/div&gt;
+    &lt;&lt;/if&gt;&gt;
 &lt;&lt;/widget&gt;&gt;
 
 &lt;&lt;widget &quot;pensiero&quot;&gt;&gt;
-    &lt;div class=&quot;txt-pensiero&quot;&gt;//&lt;&lt;print _args[0]&gt;&gt;//&lt;/div&gt;
+    &lt;&lt;if _args[1] is undefined&gt;&gt;
+        &lt;div class=&quot;txt-pensiero&quot;&gt;//&lt;&lt;print _args[0]&gt;&gt;//&lt;/div&gt;
+    &lt;&lt;else&gt;&gt;
+        &lt;div @class=&quot;&#39;txt-pensiero &#39; + _args[0]&quot;&gt;//&lt;&lt;print _args[1]&gt;&gt;//&lt;/div&gt;
+    &lt;&lt;/if&gt;&gt;
 &lt;&lt;/widget&gt;&gt;
 
 &lt;&lt;widget &quot;urlo&quot;&gt;&gt;
-    &lt;div class=&quot;txt-urlo&quot;&gt;&#39;&#39;&lt;&lt;print _args[0]&gt;&gt;&#39;&#39;&lt;/div&gt;
+    &lt;&lt;if _args[1] is undefined&gt;&gt;
+        &lt;div class=&quot;txt-urlo&quot;&gt;&#39;&#39;&lt;&lt;print _args[0]&gt;&gt;&#39;&#39;&lt;/div&gt;
+    &lt;&lt;else&gt;&gt;
+        &lt;div @class=&quot;&#39;txt-urlo &#39; + _args[0]&quot;&gt;&#39;&#39;&lt;&lt;print _args[1]&gt;&gt;&#39;&#39;&lt;/div&gt;
+    &lt;&lt;/if&gt;&gt;
 &lt;&lt;/widget&gt;&gt;
 
 &lt;&lt;widget &quot;attesa&quot;&gt;&gt;
