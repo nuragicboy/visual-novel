@@ -215,10 +215,10 @@ body {
 
 #passages {
   position: absolute;
-  left: 5%;
-  right: 5%;
+  left: 0%;
+  right: 0%;
   bottom: 5vh;
-  height: 30.33vh;
+  height: 35vh;
   background: rgba(0, 0, 0, 0.85);
   border: 0.15vw solid white; /* Spessore bordo responsive */
   z-index: 10;
@@ -346,6 +346,7 @@ a.link-internal + a.link-internal {
   margin: 0;
   padding: 0;
   line-height: 1;
+  font-size: 1vw; /* 👈 AGGIUNGI QUESTO (modifica il valore a piacere) */
 }
 
 .txt-narrazione {
@@ -511,7 +512,7 @@ body.no-box #story {
   margin-left: 0.6vw;
   font-weight: bold;
   color: #00ffcc;
-  font-size: 1.1vw;
+  font-size: 1vw;
   animation: vnArrowPulse 0.8s infinite alternate ease-in-out;
 }
 
@@ -524,6 +525,32 @@ body.no-box #story {
     opacity: 1;
     transform: translateY(4px); /* Leggero movimento verticale */
   }
+}
+
+/* ==========================================================
+   TARGHETTA NOME PERSONAGGIO (ISTANTANEA)
+   ========================================================== */
+
+.vn-nome {
+  display: block;             /* Va a capo, posizionandosi sopra il testo */
+  font-family: sans-serif;    /* Scegli il font che preferisci per i nomi */
+  font-size: 1.2vw;
+  font-weight: bold;
+  letter-spacing: 1px;
+  margin-bottom: 0.2em;
+  text-transform: uppercase;
+  opacity: 1 !important;      /* 👑 Forza l'opacità a 1, neutralizzando il motore JS */
+  display: block !important;  /* Forza la visibilità immediata */
+}
+
+/* Personalizzazione dinamica dei colori dei nomi in base alla classe del personaggio */
+.em .vn-nome { color: #ff66b2; } /* Rosa per Emily */
+.an .vn-nome { color: #3399ff; } /* Azzurro per Andrea */
+.mo .vn-nome { color: #cc33ff; } /* Viola per Mona */
+
+/* Correzione di layout per evitare che il trattino tocchi il testo se c'è il nome */
+.vn-nome + br, .vn-nome + span {
+  display: inline;
 }</style><script role="script" id="twine-user-script" type="text/twine-javascript">/* ==========================================================
    1. REGISTRO DI CICLO E MOTORE SEQUENZIALE PROTETTO
    ========================================================== */
@@ -1162,28 +1189,31 @@ $(document).on(':passagedisplay', function () {
 &lt;&lt;script&gt;&gt;
 // 1. Velocità di contorno del testo (millisecondi per carattere)
 setup.speeds = {
-    narrazione: 25, 
-    dialogo: 35,    
-    pensiero: 46,   
+    narrazione: 10, 
+    dialogo: 20,    
+    pensiero: 225,   
     urlo: 60,
-    pausaTraRighe: 350 // &lt;--- NUOVO: Millisecondi di attesa TRA una riga e l&#39;altra
+    pausaTraRighe: 100 // &lt;--- NUOVO: Millisecondi di attesa TRA una riga e l&#39;altra
 };
 
 // 2. Configurazione dei Blip Vocali dei Personaggi
 setup.audioConfig = {
     em: {
+        nome: &quot;Emily&quot;,
         file: &quot;res/audio/char/andrea-short.wav&quot;,  
         volume: 0.25,
         pitchMin: 1.20, 
         pitchMax: 1.50   
     },
     an: {
+        nome: &quot;Andrea&quot;,
         file: &quot;res/audio/char/andrea-short.wav&quot;,  
         volume: 0.25,
         pitchMin: 1.00, 
         pitchMax: 1.30   
     },
     mo: {
+        nome: &quot;████████&quot;,
         file: &quot;res/audio/char/mona.wav&quot;,  
         volume: 0.25,
         pitchMin: 1.00, 
@@ -1196,7 +1226,7 @@ setup.poolSize = 32;         // Quanti file audio simultanei allocare per i blip
 setup.audioEnabled = true;  // Se i blip vocali partono attivi (true) o mutati (false)
 
 // 4. Configurazione Nativa di SugarCube
-Config.passages.transitionOut = 600; // Tempo di dissolvenza dei passaggi
+Config.passages.transitionOut = 300; // Tempo di dissolvenza dei passaggi
 &lt;&lt;/script&gt;&gt;
 
 /* ==========================================================
@@ -1235,9 +1265,14 @@ Config.passages.transitionOut = 600; // Tempo di dissolvenza dei passaggi
 
 &lt;/div&gt;</tw-passagedata><tw-passagedata pid="3" name="Widget" tags="widget nobr" position="500,100" size="100,100">&lt;&lt;widget &quot;di&quot;&gt;&gt;
     &lt;&lt;if _args[1] is undefined&gt;&gt;
-        &lt;div class=&quot;txt-dialogo&quot;&gt;— &lt;&lt;print _args[0]&gt;&gt;&lt;/div&gt;
+        &lt;div class=&quot;txt-dialogo&quot;&gt;&quot; &lt;&lt;print _args[0]&gt;&gt;&lt;/div&gt;
     &lt;&lt;else&gt;&gt;
-        &lt;div @class=&quot;&#39;txt-dialogo &#39; + _args[0]&quot;&gt;— &lt;&lt;print _args[1]&gt;&gt;&lt;/div&gt;
+        &lt;&lt;set _sigla = _args[0]&gt;&gt;
+        &lt;&lt;set _nomeReale = setup.audioConfig[_sigla] ? setup.audioConfig[_sigla].nome : _sigla&gt;&gt;
+        &lt;div @class=&quot;&#39;txt-dialogo &#39; + _sigla&quot;&gt;
+            &lt;span class=&quot;vn-nome&quot;&gt;&lt;&lt;print _nomeReale&gt;&gt;&lt;/span&gt;
+            &quot; &lt;&lt;print _args[1]&gt;&gt;&quot;
+        &lt;/div&gt;
     &lt;&lt;/if&gt;&gt;
 &lt;&lt;/widget&gt;&gt;
 
@@ -1245,7 +1280,12 @@ Config.passages.transitionOut = 600; // Tempo di dissolvenza dei passaggi
     &lt;&lt;if _args[1] is undefined&gt;&gt;
         &lt;div class=&quot;txt-pensiero&quot;&gt;//&lt;&lt;print _args[0]&gt;&gt;//&lt;/div&gt;
     &lt;&lt;else&gt;&gt;
-        &lt;div @class=&quot;&#39;txt-pensiero &#39; + _args[0]&quot;&gt;//&lt;&lt;print _args[1]&gt;&gt;//&lt;/div&gt;
+        &lt;&lt;set _sigla = _args[0]&gt;&gt;
+        &lt;&lt;set _nomeReale = setup.audioConfig[_sigla] ? setup.audioConfig[_sigla].nome : _sigla&gt;&gt;
+        &lt;div @class=&quot;&#39;txt-pensiero &#39; + _sigla&quot;&gt;
+            &lt;span class=&quot;vn-nome&quot;&gt;&lt;&lt;print _nomeReale&gt;&gt;&lt;/span&gt;
+            //&lt;&lt;print _args[1]&gt;&gt;//
+        &lt;/div&gt;
     &lt;&lt;/if&gt;&gt;
 &lt;&lt;/widget&gt;&gt;
 
@@ -1253,7 +1293,12 @@ Config.passages.transitionOut = 600; // Tempo di dissolvenza dei passaggi
     &lt;&lt;if _args[1] is undefined&gt;&gt;
         &lt;div class=&quot;txt-urlo&quot;&gt;&#39;&#39;&lt;&lt;print _args[0]&gt;&gt;&#39;&#39;&lt;/div&gt;
     &lt;&lt;else&gt;&gt;
-        &lt;div @class=&quot;&#39;txt-urlo &#39; + _args[0]&quot;&gt;&#39;&#39;&lt;&lt;print _args[1]&gt;&gt;&#39;&#39;&lt;/div&gt;
+        &lt;&lt;set _sigla = _args[0]&gt;&gt;
+        &lt;&lt;set _nomeReale = setup.audioConfig[_sigla] ? setup.audioConfig[_sigla].nome : _sigla&gt;&gt;\
+        &lt;div @class=&quot;&#39;txt-urlo &#39; + _sigla&quot;&gt;
+            &lt;span class=&quot;vn-nome&quot;&gt;&lt;&lt;print _nomeReale&gt;&gt;&lt;/span&gt;
+            &#39;&#39;&lt;&lt;print _args[1]&gt;&gt;&#39;&#39;
+        &lt;/div&gt;
     &lt;&lt;/if&gt;&gt;
 &lt;&lt;/widget&gt;&gt;
 
