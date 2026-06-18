@@ -1252,6 +1252,7 @@ Config.passages.transitionOut = 150; // Tempo di dissolvenza dei passaggi
 &lt;&lt;if $musicOn&gt;&gt;
     &lt;&lt;link &quot;🎵 Music: ON&quot;&gt;&gt;
         &lt;&lt;set $musicOn = false&gt;&gt;
+        &lt;&lt;set setup.audioEnabled = false&gt;&gt;
         &lt;&lt;audio $currentBGM stop&gt;&gt;
         &lt;&lt;audio $currentAMB stop&gt;&gt;
         &lt;&lt;run UIBar.update()&gt;&gt;
@@ -1259,6 +1260,7 @@ Config.passages.transitionOut = 150; // Tempo di dissolvenza dei passaggi
 &lt;&lt;else&gt;&gt;
     &lt;&lt;link &quot;🔇 Music: OFF&quot;&gt;&gt;
         &lt;&lt;set $musicOn = true&gt;&gt;
+        &lt;&lt;set setup.audioEnabled = true&gt;&gt;
         &lt;&lt;audio $currentBGM volume 0.05 loop play&gt;&gt; 
         &lt;&lt;audio $currentAMB volume 0.05 loop play&gt;&gt;
         &lt;&lt;run UIBar.update()&gt;&gt;
