@@ -130,7 +130,7 @@ body {
   top: 0;
   left: 0;
   bottom: 0;
-  width: 6.5vw;             /* Larghezza flessibile anziché 100px */
+  width: 6.5vw;
   z-index: 1000;
   background: rgba(0, 0, 0, 0.45);
   backdrop-filter: blur(6px);
@@ -147,14 +147,13 @@ body {
 
 #ui-bar-body {
   width: 100%;
-  padding-top: 1vh;         /* Distanza verticale responsive */
+  padding-top: 1vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.5vh;               /* Spazio tra elementi responsive */
+  gap: 1.5vh;
 }
 
-/* Fix per l'allineamento di StoryCaption */
 #story-caption {
   width: 100%;
   display: flex;
@@ -168,21 +167,20 @@ body {
   justify-content: center;
 }
 
-/* Gestione dei bottoni generici nella barra laterale */
 #ui-bar-body a {
-  width: 80%; 
-  min-height: 4.5vh;        /* Altezza proporzionale allo schermo */
-  padding: 0.8vh 0.4vw;     /* Padding fluido */
+  width: 80%;
+  min-height: 4.5vh;
+  padding: 0.8vh 0.4vw;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
   color: white;
   text-decoration: none;
-  font-size: 0.75vw;        /* Il testo si rimpicciolisce sui monitor piccoli */
+  font-size: 0.75vw;
   line-height: 1.2;
   border: 0.1vw solid rgba(255, 255, 255, 0.3);
-  border-radius: 0.5vw;     /* Angoli arrotondati proporzionali */
+  border-radius: 0.5vw;
   transition: 0.15s ease;
   cursor: pointer;
   box-sizing: border-box;
@@ -201,34 +199,35 @@ body {
 #story {
   position: absolute;
   top: 0;
-  left: 6.5vw;              /* Segue la nuova larghezza della sidebar */
+  left: 6.5vw;
   right: 0;
   bottom: 0;
   overflow: hidden;
-  margin: 0; 
+  margin: 0;
   padding: 0;
 }
 
-/* ==========================================================
+/* =========================
    VN TEXTBOX
-   ========================================================== */
+========================= */
 
 #passages {
   position: absolute;
-  left: 0%;
-  right: 0%;
-  bottom: 5vh;
-  height: 35vh;
+  left: 2vw !important;
+  right: 2vw !important;
+  bottom: 3vh;
+  height: 30vh;
   background: rgba(0, 0, 0, 0.85);
-  border: 0.15vw solid white; /* Spessore bordo responsive */
+  border: 0.15vw solid white;
   z-index: 10;
+  max-width: none !important;
 }
 
 .passage {
   box-sizing: border-box;
   width: 100%;
   height: 100%;
-  padding: 2.5vh 2vw;       /* Padding interno fluido (verticale/orizzontale) */
+  padding: 2.5vh 2vw;
   color: white;
   line-height: 1.4;
   overflow-y: auto;
@@ -236,10 +235,7 @@ body {
   transition: opacity 0.3s ease-in-out;
 }
 
-.passage-in {
-  opacity: 0;
-}
-
+.passage-in { opacity: 0; }
 .passage-out {
   opacity: 0;
   position: absolute;
@@ -247,10 +243,7 @@ body {
   left: 0;
 }
 
-.passage p {
-  margin: 0;
-  padding: 0;
-}
+.passage p { margin: 0; padding: 0; }
 
 /* =========================
    CHOICES
@@ -265,6 +258,7 @@ body {
   cursor: pointer;
   opacity: 0;
   pointer-events: none;
+  font-size: 2.2vh; /* Dimensione scelte */
   transition: opacity 0.6s ease-in-out, background 0.15s, color 0.15s;
 }
 
@@ -280,11 +274,11 @@ body {
 
 .txt-narrazione + a.link-internal,
 .txt-dialogo + a.link-internal {
-  margin-top: 2vh;          /* Spazio sopra la prima scelta fluido */
+  margin-top: 2vh;
 }
 
 a.link-internal + a.link-internal {
-  margin-top: 0.8vh;        /* Spazio tra le scelte fluido */
+  margin-top: 0.8vh;
 }
 
 /* =========================
@@ -304,17 +298,161 @@ a.link-internal + a.link-internal {
   max-height: 90%;
 }
 
-.left { left: calc(12% + 6.5vw); } /* Adeguato alla sidebar fluida */
+.left { left: calc(12% + 6.5vw); }
 .right { right: 12%; }
+.center { left: 50%; transform: translateX(-50%); }
 
-.center {
-  left: 50%;
-  transform: translateX(-50%);
+/* =========================
+   DIFFERENZIAZIONE TESTI
+========================= */
+
+.txt-narrazione + br,
+.txt-dialogo + br {
+  display: none;
+}
+
+.txt-narrazione,
+.txt-dialogo {
+  display: block;
+  margin: 0;
+  padding: 0;
+  line-height: 1.2;
+  font-size: 3.2vh; /* Dimensione testo base */
+}
+
+.txt-narrazione { font-style: italic; color: #b0b0b0; }
+.txt-dialogo { font-style: normal; color: #ffffff; }
+
+.vn-nome {
+  display: block !important;
+  font-family: sans-serif;
+  font-size: 3.8vh; /* Dimensione nome personaggio */
+  font-weight: bold;
+  letter-spacing: 1px;
+  margin-bottom: 0.2em;
+  text-transform: uppercase;
+  opacity: 1 !important;
+}
+
+.em .vn-nome { color: #ff66b2; }
+.an .vn-nome { color: #3399ff; }
+.mo .vn-nome { color: #cc33ff; }
+
+/* =========================
+   MAIN MENU (body.no-box)
+========================= */
+
+body.no-box #passages {
+  background: transparent !important;
+  border: none !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  z-index: 10;
+}
+
+body.no-box .passage { height: 100%; width: 100%; padding: 0; }
+body.no-box #ui-bar { display: none !important; }
+body.no-box #story { margin-left: 0 !important; }
+
+.main-menu-screen {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  box-sizing: border-box;
+  background-image: url("res/img/bgd/menu.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.menu-area {
+  position: absolute !important;
+  right: 8vw !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 30vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3.5vh;
+}
+
+.menu-title {
+  font-size: 3.5vw;
+  color: white;
+  margin: 0;
+  text-align: center;
+  text-shadow: 0.15vw 0.15vw 0.8vw rgba(0, 0, 0, 0.8);
+}
+
+.menu-buttons a {
+  display: block;
+  background-color: #edbbf9 !important;
+  color: white !important;
+  text-align: center;
+  padding: 1.6vh 0;
+  font-size: 1.2vw;
+  font-weight: bold;
+  text-decoration: none !important;
+  border-radius: 50vh;
+  border: none !important;
+  box-shadow: 0 0.4vh 0.8vh rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease, background-color 0.2s ease;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+.menu-buttons a:hover {
+  background-color: #e2a2f0 !important;
+  transform: scale(1.05);
+  color: white !important;
 }
 
 /* =========================
-   DEBUG TITLE BAR
+   UTILITY & ANIMAZIONI
 ========================= */
+
+#continua-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 999;
+  cursor: pointer;
+  background: transparent;
+}
+
+.link-continua {
+  display: inline-block;
+  margin-left: 0.6vw;
+  font-weight: bold;
+  color: #00ffcc;
+  font-size: 1vw;
+  animation: vnArrowPulse 0.8s infinite alternate ease-in-out;
+}
+
+@keyframes vnArrowPulse {
+  0% { opacity: 0.3; transform: translateY(0); }
+  100% { opacity: 1; transform: translateY(4px); }
+}
+
+.fade-out {
+  animation: fadeOutMenu 0.8s ease-in-out forwards;
+  pointer-events: none;
+}
+
+@keyframes fadeOutMenu {
+  0% { opacity: 1; }
+  100% { opacity: 0; transform: scale(0.98); }
+}
 
 #debug-passage-title {
   position: fixed;
@@ -329,228 +467,6 @@ a.link-internal + a.link-internal {
   font-family: monospace;
   padding-left: 0.8vw;
   z-index: 2000;
-}
-
-/* ==========================================================
-   DIFFERENZIAZIONE TESTI
-   ========================================================== */
-
-.txt-narrazione + br, 
-.txt-dialogo + br {
-  display: none;
-}
-
-.txt-narrazione, 
-.txt-dialogo {
-  display: block; 
-  margin: 0;
-  padding: 0;
-  line-height: 1;
-  font-size: 4vh; /* 👈 AGGIUNGI QUESTO (modifica il valore a piacere) */
-}
-
-.txt-narrazione {
-  font-style: italic;
-  color: #b0b0b0; 
-}
-
-.txt-dialogo {
-  font-style: normal;
-  color: #ffffff; 
-}
-
-.scelte {
-  opacity: 0;
-  pointer-events: none; 
-  transition: opacity 0.6s ease-in-out;
-  margin-top: 1.5vh; 
-}
-
-.scelte.reveal {
-  opacity: 1;
-  pointer-events: auto; 
-}
-
-
-/* ==========================================================
-   MAIN MENU (body.no-box)
-   ========================================================== */
-
-/* --- 1. IL RESET UNIVERSALE --- */
-body.no-box #passages {
-  background: transparent !important;
-  border: none !important;
-  position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
-  width: 100vw !important;
-  height: 100vh !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  z-index: 10; 
-}
-
-body.no-box .passage {
-  height: 100%;
-  width: 100%;
-  padding: 0;
-}
-
-body.no-box #ui-bar {
-  display: none !important;
-}
-body.no-box #story {
-  margin-left: 0 !important;
-}
-
-/* --- 2. LA SCHERMATA DEL MENU (Forzata a tutto schermo) --- */
-.main-menu-screen {
-  position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
-  width: 100vw !important;
-  height: 100vh !important;
-  box-sizing: border-box;
-  background-image: url("res/img/bgd/menu.png"); 
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-
-/* --- 3. L'AREA DEL TESTO E DEI BOTTONI (Ancorata a destra del monitor) --- */
-.menu-area {
-  position: absolute !important;
-  right: 8vw !important;         /* Distanza fissa dal bordo destro dello schermo */
-  top: 50% !important;           /* Centra perfettamente in verticale */
-  transform: translateY(-50%) !important; /* Bilancia l'altezza del menù per il centramento */
-  
-  width: 30vw;                /* Occupa sempre 1/3 di specchio d'attivazione */
-  display: flex;
-  flex-direction: column;
-  align-items: center;     
-  gap: 3.5vh;              
-}
-
-.menu-title {
-  font-size: 3.5vw;        /* Il titolo scala proporzionalmente alla larghezza */
-  color: white;
-  margin: 0;
-  text-align: center;
-  text-shadow: 0.15vw 0.15vw 0.8vw rgba(0, 0, 0, 0.8); 
-}
-
-.menu-buttons {
-  display: flex;
-  flex-direction: column;
-  gap: 1.8vh;              /* Spazio tra i pulsanti fluido */
-  width: 100%;             
-}
-
-/* --- 4. STILE DEI PULSANTI OVALI --- */
-.menu-buttons a {
-  display: block;
-  background-color: #edbbf9 !important; 
-  color: white !important;              
-  text-align: center;
-  padding: 1.6vh 0;         /* Altezza del pulsante dinamica */
-  font-size: 1.2vw;         /* Font dei pulsanti dinamico */
-  font-weight: bold;
-  text-decoration: none !important;
-  
-  /* Uso 50vh: assicura la forma a "pillola/ovale" perfetta a qualsiasi risoluzione */
-  border-radius: 50vh;                 
-  
-  border: none !important;
-  box-shadow: 0 0.4vh 0.8vh rgba(0, 0, 0, 0.3); /* Ombra fluida */
-  transition: transform 0.2s ease, background-color 0.2s ease;
-  opacity: 1 !important;
-  pointer-events: auto !important;
-}
-
-.menu-buttons a:hover {
-  background-color: #e2a2f0 !important; 
-  transform: scale(1.05);               
-  color: white !important;
-}
-
-/* --- ANIMAZIONE FADE OUT --- */
-
-.fade-out {
-  animation: fadeOutMenu 0.8s ease-in-out forwards;
-  pointer-events: none; /* 🔐 Sicurezza UX: impedisce click multipli durante la sfumatura */
-}
-
-@keyframes fadeOutMenu {
-  0% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-    transform: scale(0.98); /* Opzionale: un leggerissimo allontanamento per dare profondità */
-  }
-}
-
-/* ==========================================================
-   OVERLAY CLICCABILE VN (GESTIONE CONTINUA)
-   ========================================================== */
-
-/* Copertura totale trasparente ma intercettabile */
-#continua-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: 999; /* Sopra la textbox (10) ma sotto la barra laterale UI (1000) così i menù restano salvi */
-  cursor: pointer;
-  background: transparent;
-}
-
-/* Elegante freccetta lampeggiante stile Visual Novel moderna */
-.link-continua {
-  display: inline-block;
-  margin-left: 0.6vw;
-  font-weight: bold;
-  color: #00ffcc;
-  font-size: 1vw;
-  animation: vnArrowPulse 0.8s infinite alternate ease-in-out;
-}
-
-@keyframes vnArrowPulse {
-  0% {
-    opacity: 0.3;
-    transform: translateY(0);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(4px); /* Leggero movimento verticale */
-  }
-}
-
-/* ==========================================================
-   TARGHETTA NOME PERSONAGGIO (ISTANTANEA)
-   ========================================================== */
-
-.vn-nome {
-  display: block;             /* Va a capo, posizionandosi sopra il testo */
-  font-family: sans-serif;    /* Scegli il font che preferisci per i nomi */
-  font-size: 5vh;
-  font-weight: bold;
-  letter-spacing: 1px;
-  margin-bottom: 0.2em;
-  text-transform: uppercase;
-  opacity: 1 !important;      /* 👑 Forza l'opacità a 1, neutralizzando il motore JS */
-  display: block !important;  /* Forza la visibilità immediata */
-}
-
-/* Personalizzazione dinamica dei colori dei nomi in base alla classe del personaggio */
-.em .vn-nome { color: #ff66b2; } /* Rosa per Emily */
-.an .vn-nome { color: #3399ff; } /* Azzurro per Andrea */
-.mo .vn-nome { color: #cc33ff; } /* Viola per Mona */
-
-/* Correzione di layout per evitare che il trattino tocchi il testo se c'è il nome */
-.vn-nome + br, .vn-nome + span {
-  display: inline;
 }</style><script role="script" id="twine-user-script" type="text/twine-javascript">/* ==========================================================
    1. REGISTRO DI CICLO E MOTORE SEQUENZIALE PROTETTO
    ========================================================== */
