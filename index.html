@@ -104,7 +104,7 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
 		<div id="init-lacking"><p>Browser lacks capabilities required to play.</p><p>Upgrade or switch to another browser.</p></div>
 		<div id="init-loading"><div>Loading&hellip;</div></div>
 	</div>
-	<tw-storydata name="index" startnode="32" creator="Twine" creator-version="2.12.0" format="SugarCube" format-version="2.37.3" ifid="FFA796BE-699E-4438-B68B-B58679C02FFB" options="" tags="" zoom="1" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css">/* =========================
+	<tw-storydata name="index" startnode="38" creator="Twine" creator-version="2.12.0" format="SugarCube" format-version="2.37.3" ifid="FFA796BE-699E-4438-B68B-B58679C02FFB" options="" tags="" zoom="1" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css">/* =========================
    BASE
 ========================= */
 
@@ -215,10 +215,11 @@ body {
   position: absolute;
   left: 2vw !important;
   right: 2vw !important;
-  bottom: 3vh;
-  height: 30vh;
-  background: rgba(0, 0, 0, 0.85);
+  bottom: -5vh;
+  height: 36vh;
+  background: #b7c6f9;
   border: 0.15vw solid white;
+  border-radius: 2vw;
   z-index: 10;
   max-width: none !important;
 }
@@ -228,7 +229,7 @@ body {
   width: 100%;
   height: 100%;
   padding: 2.5vh 2vw;
-  color: white;
+  color: #111111;
   line-height: 1.4;
   overflow-y: auto;
   opacity: 1;
@@ -253,7 +254,9 @@ body {
   display: block;
   padding: 0.8vh 1vw;
   border: 0.1vw solid white;
-  color: white;
+  background-color: #edbbf9;
+  border-radius: 50vh;
+  color: #111111;
   text-decoration: none;
   cursor: pointer;
   opacity: 0;
@@ -268,13 +271,13 @@ body {
 }
 
 .passage a.link-internal:hover {
-  background: white;
-  color: black;
+  background: #e2a2f0;
+  color: #000000;
 }
 
 .txt-narrazione + a.link-internal,
 .txt-dialogo + a.link-internal {
-  margin-top: 2vh;
+  margin-top: 1vh;
 }
 
 a.link-internal + a.link-internal {
@@ -320,8 +323,8 @@ a.link-internal + a.link-internal {
   font-size: 3.2vh; /* Dimensione testo base */
 }
 
-.txt-narrazione { font-style: italic; color: #b0b0b0; }
-.txt-dialogo { font-style: normal; color: #ffffff; }
+.txt-narrazione { font-style: italic; color: #444444; }
+.txt-dialogo { font-style: normal; color: #111111; }
 
 .vn-nome {
   display: block !important;
@@ -334,9 +337,9 @@ a.link-internal + a.link-internal {
   opacity: 1 !important;
 }
 
-.em .vn-nome { color: #ff66b2; }
-.an .vn-nome { color: #3399ff; }
-.mo .vn-nome { color: #cc33ff; }
+.em .vn-nome { color: #cc0066; }
+.an .vn-nome { color: #0066cc; }
+.mo .vn-nome { color: #9900cc; }
 
 /* =========================
    MAIN MENU (body.no-box)
@@ -366,7 +369,7 @@ body.no-box #story { margin-left: 0 !important; }
   width: 100vw !important;
   height: 100vh !important;
   box-sizing: border-box;
-  background-image: url("res/img/bgd/menu.png");
+  background-image: url("res/img/bgd/menu.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -395,7 +398,7 @@ body.no-box #story { margin-left: 0 !important; }
 .menu-buttons a {
   display: block;
   background-color: #edbbf9 !important;
-  color: white !important;
+  color: #111111 !important;
   text-align: center;
   padding: 1.6vh 0;
   font-size: 1.2vw;
@@ -412,7 +415,7 @@ body.no-box #story { margin-left: 0 !important; }
 .menu-buttons a:hover {
   background-color: #e2a2f0 !important;
   transform: scale(1.05);
-  color: white !important;
+  color: #000000 !important;
 }
 
 /* =========================
@@ -434,7 +437,7 @@ body.no-box #story { margin-left: 0 !important; }
   display: inline-block;
   margin-left: 0.6vw;
   font-weight: bold;
-  color: #00ffcc;
+  color: #008066;
   font-size: 1vw;
   animation: vnArrowPulse 0.8s infinite alternate ease-in-out;
 }
@@ -455,7 +458,7 @@ body.no-box #story { margin-left: 0 !important; }
 }
 
 #debug-passage-title {
-
+  display: none !important;
   position: fixed;
   top: 0;
   left: 5vw;
@@ -516,7 +519,7 @@ body.no-box #story { margin-left: 0 !important; }
   display: block;
   width: 15vw; /* Leggermente più stretto per distinguersi */
   background-color: #edbbf9 !important;
-  color: white !important;
+  color: #111111 !important;
   text-align: center;
   padding: 1.2vh 0;
   font-size: 1.1vw;
@@ -529,6 +532,7 @@ body.no-box #story { margin-left: 0 !important; }
 .back-btn:hover {
   background-color: #e2a2f0 !important;
   transform: scale(1.05);
+  color: #000000 !important;
 }
 
 .bottom-center-wrapper {
@@ -1420,6 +1424,7 @@ Osservi Emily allontanarsi con un sorrisone.
 &quot;Ma guarda questa come saltella. Scommetto che adesso passera tutto il tempo a parlare di lui. Buon per lei dai, si merita di essere felice.&quot;
 &lt;&lt;continua&gt;&gt;
 
+&lt;&lt;sprite &quot;center&quot; &quot;&quot;&gt;&gt;
 Continui a osservarla finché non scompare dietro l&#39;angolo, poi sospiri.
 &quot;Credo che quest’anno mi concentrerò sugli studi. La scuola è appena ricominciata e ci sono tante cose a cui devo pensare...&quot;
 Sorridi dolcemente pensando all’entusiasmo di tua sorella e poi entri anche tu in classe.
@@ -1470,14 +1475,13 @@ La chiamata termina. Mette via il telefono e ti appoggi al muro vicino all&#39;i
 Forzi un sorriso e  rimani ad aspettare tua sorella davanti a casa.
 
 &lt;&lt;continua&gt;&gt;
-&lt;&lt;set $bg = &quot;&quot;&gt;&gt;
 Passano 15 minuti, poi 30, poi un&#39;ora.
 
 &lt;&lt;continua&gt;&gt;
 
 &lt;&lt;set $bg = &quot;res/img/bgd/scena 3.png&quot;&gt;&gt;
 &lt;&lt;sprite &quot;center&quot; &quot;res/img/char/and-mad.png&quot;&gt;&gt;
-&lt;&lt;di an &quot;Ma dove è finita?! Mi aveva detto che sarebbe arrivata tra quindici minuti!! S’è scordata di me? vabbè avrà di meglio da fare... fa un sacco freddo qui...&quot;&gt;&gt;
+&lt;&lt;di an &quot;Ma dove è finita?! Si sarà dimenticata?. fa un sacco freddo qui...&quot;&gt;&gt;
 
 [[Non fare nulla, arriverà|no messaggi]]
 [[Mandale un messaggio|1 messaggio]]
@@ -1498,7 +1502,6 @@ Passano 15 minuti, poi 30, poi un&#39;ora.
 &lt;&lt;continua&gt;&gt;
 
 &lt;&lt;sprite &quot;center&quot; &quot;&quot;&gt;&gt;
-&lt;&lt;set $bg = &quot;&quot;&gt;&gt;
 La porta si apre, sei finalmente libera dalle catene del freddo. Urrà!!
 [[avanti|dicembre clueless i]]</tw-passagedata><tw-passagedata pid="7" name="1 messaggio" tags="" position="400,1100" size="100,100">Prendi il telefono e le scrivi un messaggio:
 &quot;Hey ciccia, non voglio metterti fretta, ma ne è passsato di tempo, cioè non che abbia niente da fare... ma ho freddo qua.&quot;
@@ -1587,7 +1590,7 @@ Momento. In che senso le ha preso il telefono?
 Stanno assieme da un mese e fa già il gelosone?
 
 [[preoccupati per tua sorella]]
-[[incazzati con ███████]]</tw-passagedata><tw-passagedata pid="11" name="dicembre angry" tags="" position="1000,1800" size="100,100">&lt;&lt;sprite &quot;center&quot; &quot;&quot;&gt;&gt;
+[[incazzati con ███████]]</tw-passagedata><tw-passagedata pid="11" name="dicembre angry" tags="" position="1150,1800" size="100,100">&lt;&lt;sprite &quot;center&quot; &quot;&quot;&gt;&gt;
 &lt;&lt;set $bg = &quot;res/img/bgd/scena 3.5.jpg&quot;&gt;&gt;
 Fai ingresso nella stanza con alcune borse del negozio. Emily è seduta sul letto e non stacca gli occhi dal telefono.
 &lt;&lt;continua&gt;&gt;
@@ -2040,8 +2043,33 @@ Te ne vai.
 
 &lt;&lt;sprite &quot;center&quot; &quot;&quot;&gt;&gt;
 &lt;&lt;di an &quot;la pensi così?! prima o poi te ne accorgerai e io TE LO AVEVO DETTO!!&quot;&gt;&gt;
-[[avanti|gennaio-movie night bad]]</tw-passagedata><tw-passagedata pid="17" name="gennaio-movie night bad" tags="" position="1100,2500" size="100,100">&lt;&lt;sprite &quot;center&quot; &quot;&quot;&gt;&gt;
-Emily non si presenta alla movie night
+[[avanti|gennaio-movie night bad]]</tw-passagedata><tw-passagedata pid="17" name="gennaio-movie night bad" tags="" position="1325,2500" size="100,100">&lt;&lt;sprite &quot;center&quot; &quot;&quot;&gt;&gt;
+Emily non si presenta alla movie night.
+&lt;&lt;continua&gt;&gt;
+
+Passano settimane. È da un po’ che non parli con Emily. Se la vedi, è sempre in giro con il suo ragazzo. Nei giorni in cui non esce, si chiude in camera tutto il giorno. 
+Oggi ti manca particolarmente e decidi di provare a parlarci, in nome dei bei vecchi tempi.
+&lt;&lt;continua&gt;&gt;
+
+Ti avvicini alla porta della stanza di Emily e bussi gentilmente sulla porta.
+&lt;&lt;continua&gt;&gt;
+
+&lt;&lt;sprite &quot;center&quot; &quot;res/img/char/and-neutral.png&quot;&gt;&gt;
+&lt;&lt;di an &quot;Emily? Posso entrare?&quot;&gt;&gt;
+&lt;&lt;continua&gt;&gt;
+
+Nessuna risposta dall’altra parte.
+&lt;&lt;continua&gt;&gt;
+
+&lt;&lt;sprite &quot;center&quot; &quot;res/img/char/and-confused.png&quot;&gt;&gt;
+&lt;&lt;di an &quot;Emily? Guarda che entro comunque, eh.&quot;&gt;&gt;
+&lt;&lt;continua&gt;&gt;
+
+Spingi lentamente la porta...
+&lt;&lt;continua&gt;&gt;
+
+&lt;&lt;sprite &quot;center&quot; &quot;res/img/char/and-scared.png&quot;&gt;&gt;
+&lt;&lt;di an &quot;EMILY, NOOOOO!!&quot;&gt;&gt;
 [[avanti|GAME OVER]]</tw-passagedata><tw-passagedata pid="18" name="gennaio-movie night clueless" tags="" position="200,2500" size="100,100">&lt;&lt;set $bg = &quot;res/img/bgd/scena 4.1.jpg&quot;&gt;&gt;
 &lt;&lt;sprite &quot;center&quot; &quot;&quot;&gt;&gt;
 Vacanze di Natale, Serata cinema in famiglia.
@@ -2097,7 +2125,7 @@ Emily digita rapidamente una risposta senza guardare il film.
 
 Il telefono di Emily vibra di nuovo.
 [[lamentati, non riesci nemmeno a seguire il film|lamentati]] 
-[[Ignorala e fai del tuo meglio per concentrarti sul film|ignora la cosa totalmente]]</tw-passagedata><tw-passagedata pid="19" name="GAME OVER" tags="no-box" position="1100,4800" size="100,100">  (body: &quot;no-box&quot;)
+[[Ignorala e fai del tuo meglio per concentrarti sul film|ignora la cosa totalmente]]</tw-passagedata><tw-passagedata pid="19" name="GAME OVER" tags="no-box" position="1225,4800" size="100,100">  (body: &quot;no-box&quot;)
 &lt;div class=&quot;main-menu-screen&quot; style=&quot;background-image: url(&#39;res/img/bgd/end game over.png&#39;);&quot;&gt;
 
 
@@ -2123,12 +2151,10 @@ Poi. Vibrazione. Una. Due. Poi una raffica, il telefono sembra non voler più sm
 Emily tira fuori il telefono, guarda le notifiche e fa per andarsene.
 [[rimani a guardare il film]]
 [[seguila]]
-[[prendile il telefono e guarda la chat|prendile il telefono]]</tw-passagedata><tw-passagedata pid="21" name="ignora la cosa totalmente" tags="" position="100,2700" size="100,100">Non dici nulla per metà film, poi i tuoi nervi hanno la meglio e inizi a fare il verso al suono di notifica ogni volta che arriva un messaggio.
-Tua sorella coglie l&#39;antifona e per lo meno ha la decenza di mettere il telefono in silenzioso.
+[[prendile il telefono e guarda la chat|prendile il telefono]]</tw-passagedata><tw-passagedata pid="21" name="ignora la cosa totalmente" tags="" position="75,2800" size="100,100">Non dici nulla per metà film, poi i tuoi nervi hanno la meglio e inizi a fare il verso al suono di notifica ogni volta che arriva un messaggio. Tua sorella coglie l&#39;antifona e per lo meno ha la decenza di mettere il telefono in silenzioso.
 Il film va avanti, nell&#39;indifferenza più totale di tua sorella, che a una certa si alzae se ne va, senza più tornare.
 &lt;&lt;continua&gt;&gt;
 
-&lt;&lt;set $bg = &quot;&quot;&gt;&gt;
 Tua sorella passerà buona parte del resto delle vacanze in camera sua.
 Dopo la notte di natale sembra quasi che ti eviti. non sai cosa gli hai fatto o perché si comporti così, fatto sta che inizi a ignorarla anche tu.
 &lt;&lt;continua&gt;&gt;
@@ -2145,8 +2171,6 @@ Anche l&#39;investigatore privato ha avuto poco successo. Appena riesce a indivi
 &lt;&lt;continua&gt;&gt;
 
 C&#39;è lei. e c&#39;è lui. sempre.
-&lt;&lt;continua&gt;&gt;
-
 Bastardo...
 
 [[avanti|BAD ENDING]]</tw-passagedata><tw-passagedata pid="22" name="prendile il telefono" tags="" position="800,2900" size="100,100">&lt;&lt;sprite &quot;center&quot; &quot;res/img/char/and-confused.png&quot;&gt;&gt;
@@ -2526,14 +2550,13 @@ Fine della scena introduttiva.</tw-passagedata><tw-passagedata pid="36" name="te
       &lt;&lt;link &quot;Credits&quot; &quot;Credits&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
     &lt;/div&gt;
   &lt;/div&gt;
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="39" name="transizione" tags="" position="400,700" size="100,100">&lt;&lt;set $bg = &quot;&quot;&gt;&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="39" name="transizione" tags="" position="400,700" size="100,100">
 &lt;&lt;sprite &quot;center&quot; &quot;&quot;&gt;&gt;
-Andrea va all&#39;appuntamento.
+Emily va all&#39;appuntamento.
 Lei e ███████ si mettono assieme.
 
 Da allora è passato un mese.
 [[Avanti|novembre 01]] </tw-passagedata><tw-passagedata pid="40" name="avanti" tags="" position="300,1500" size="100,100">&lt;&lt;sprite &quot;center&quot; &quot;&quot;&gt;&gt;
-&lt;&lt;set $bg = &quot;&quot;&gt;&gt;
 &quot;Che scemi&quot; pensi tra te e te.
 
 La porta si apre, sei finalmente libera dalle catene del freddo. Urrà!!
@@ -2550,7 +2573,6 @@ Emily sembra stranita dal tuo commento.
 &lt;&lt;continua&gt;&gt;
 
 &lt;&lt;sprite &quot;center&quot; &quot;&quot;&gt;&gt;
-&lt;&lt;set $bg = &quot;&quot;&gt;&gt;
 Entrate finalmente a casa.
 Osservi tua sorella.
 Hai una brutta sensazione, come se ███████ significasse guai.
@@ -2567,7 +2589,6 @@ Manco con tua sorella di fa parlare?!&quot;&gt;&gt;
 &lt;&lt;continua&gt;&gt;
 
 &lt;&lt;sprite &quot;center&quot; &quot;&quot;&gt;&gt;
-&lt;&lt;set $bg = &quot;&quot;&gt;&gt;
 Entrate finalmente in casa. Emily se ne va in camera sbattendo la porta.
 Non hai una buona sensazione.
 
@@ -2580,7 +2601,6 @@ Non hai una buona sensazione.
 &lt;&lt;continua&gt;&gt;
 
 &lt;&lt;sprite &quot;center&quot; &quot;&quot;&gt;&gt;
-&lt;&lt;set $bg = &quot;&quot;&gt;&gt;
 Entrate finalmente in casa. Emily se ne va in camera sbattendo la porta.
 Non hai una buona sensazione.
 
